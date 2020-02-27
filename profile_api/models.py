@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
+from django.conf import settings
 
 class UserProfileManager(BaseUserManager):
     """manager for user profiles"""
@@ -52,3 +52,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """str representation pf the user object"""
         return self.name
+
+
+class ProfileFeedItem(models.Model):
+    """manage for user profile feed"""
+    objects = models.Manager()
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    status_txt = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """str representation of profile feed"""
+        return self.status_txt
